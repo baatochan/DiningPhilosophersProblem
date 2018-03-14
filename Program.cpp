@@ -10,10 +10,15 @@ using namespace std;
 Philosopher* Program::philosophers[5];
 std::thread Program::threads[5];
 
+time_t Program::startTime;
+
 void Program::start() {
 	for (unsigned int i = 0; i < 5; i++) {
 		Program::philosophers[i] = new Philosopher(i);
 	}
+
+
+	cout<<"Time | ";
 	for (unsigned int i = 0; i < 5; i++) {
 		cout << "Philosopher "<<i;
 		if (i < 4)
@@ -26,23 +31,36 @@ void Program::start() {
 	}
 	cout<<endl;
 
+	time(&startTime);
+
 	for (unsigned int i = 0; i < 5; i++) {
 		threads[i] = philosophers[i]->spawnThread();
 	}
 
-	for (unsigned int i = 0; i < 5; i++) {
-		threads[i].join();
+	for (auto &thread : threads) {
+		thread.join();
 	}
 }
 
 void Program::showPhilosophersStatus() {
+	time_t currentTime;
+	time(&currentTime);
+
+	string diffTime = to_string((int)difftime(currentTime, startTime));
+
+	cout<<diffTime;
+	for (int i = 0; i < (5 - diffTime.length()); i++) {
+		cout<<" ";
+	}
+	cout<<"| ";
+
 	for (unsigned int i = 0; i < 5; i++) {
 		if (philosophers[i]->state) {
 			cout<<"Eating";
-			cout<<"        ";
+			cout<<"       ";
 		} else {
 			cout<<"Thinking";
-			cout<<"      ";
+			cout<<"     ";
 		}
 		if (i < 4)
 			cout<<" | ";

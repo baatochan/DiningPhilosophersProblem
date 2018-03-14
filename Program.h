@@ -13,8 +13,9 @@ class Program {
 private:
 	static Philosopher* philosophers[5];
 	static std::thread threads[5];
-public:
 
+	static time_t startTime;
+public:
 	static void start();
 
 	static void showPhilosophersStatus();
