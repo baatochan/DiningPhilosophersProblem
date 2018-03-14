@@ -2,6 +2,8 @@
 // Created by barto on 13.03.18.
 //
 
+#define numberOfPhilosophers 6
+
 #ifndef DININGPHILOSOPHERSPROBLEM_PROGRAM_H
 #define DININGPHILOSOPHERSPROBLEM_PROGRAM_H
 
@@ -11,14 +13,14 @@
 
 class Program {
 private:
-	static Philosopher* philosophers[5];
-	static std::thread threads[5];
+	static Philosopher* philosophers[numberOfPhilosophers];
+	static std::thread threads[numberOfPhilosophers];
 
 	static time_t startTime;
 public:
 	static void start();
 
-	static void showPhilosophersStatus();
+	static bool showPhilosophersStatus();
 };
 
 
