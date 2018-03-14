@@ -6,9 +6,18 @@
 #define DININGPHILOSOPHERSPROBLEM_PROGRAM_H
 
 
+#include <thread>
+#include "Philosopher.h"
+
 class Program {
+private:
+	static Philosopher* philosophers[5];
+	static std::thread threads[5];
 public:
-	void start();
+
+	static void start();
+
+	static void showPhilosophersStatus();
 };
 
 

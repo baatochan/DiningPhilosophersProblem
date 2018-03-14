@@ -6,22 +6,26 @@
 #define DININGPHILOSOPHERSPROBLEM_PHILOSOPHER_H
 
 
+#include <thread>
+
 class Philosopher {
 private:
-    unsigned int id;
+	unsigned int id;
 
-    bool leftFork; //false if used, true if free
-    bool rightFork;
+	bool leftFork; //false if used, true if free
+	bool rightFork;
 
-    bool state; //false if thinking, true if eating
+	void think(unsigned int seconds);
 
-    void think(unsigned int seconds);
-    void eat();
-
+	void eat();
 public:
-    Philosopher(unsigned int id);
+	bool state; //false if thinking, true if eating
 
-    void live();
+	Philosopher(unsigned int id);
+
+	void live();
+
+	std::thread spawnThread();
 };
 
 
