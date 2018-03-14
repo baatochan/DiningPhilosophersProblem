@@ -3,4 +3,4 @@ project(DiningPhilosophersProblem)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(DiningPhilosophersProblem main.cpp Program.cpp Program.h)
+add_executable(DiningPhilosophersProblem main.cpp Program.cpp Program.h Philosopher.cpp Philosopher.h)
