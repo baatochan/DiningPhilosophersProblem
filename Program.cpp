@@ -55,12 +55,21 @@ void Program::showPhilosophersStatus() {
 	cout<<"| ";
 
 	for (unsigned int i = 0; i < 5; i++) {
-		if (philosophers[i]->state) {
+		if (philosophers[i]->state == 3) {
+			cout<<"Dead";
+			cout<<"         ";
+
+		} else if (philosophers[i]->state == 2) {
 			cout<<"Eating";
 			cout<<"       ";
-		} else {
+		} else if (philosophers[i]->state == 1) {
 			cout<<"Thinking";
 			cout<<"     ";
+		} else if (philosophers[i]->state == 0)
+			cout<<"Not yet start";
+		else {
+			cout<<"Error!";
+			cout<<"       ";
 		}
 		if (i < 4)
 			cout<<" | ";

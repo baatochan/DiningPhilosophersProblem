@@ -8,13 +8,13 @@
 #include "Program.h"
 
 void Philosopher::think(unsigned int seconds) {
-	state = false;
+	state = 1;
 	Program::showPhilosophersStatus();
 	sleep(seconds);
 }
 
 void Philosopher::eat() {
-	state = true;
+	state = 2;
 	leftFork = false;
 	rightFork = false;
 	Program::showPhilosophersStatus();
@@ -27,6 +27,7 @@ Philosopher::Philosopher(unsigned int id) {
 	this->id = id;
 	leftFork = true;
 	rightFork = true;
+	state = 0;
 }
 
 void Philosopher::live() {
@@ -38,6 +39,8 @@ void Philosopher::live() {
 		think((unsigned int) dist(mt));
 		eat();
 	}
+	state = 3;
+	Program::showPhilosophersStatus();
 }
 
 std::thread Philosopher::spawnThread() {
