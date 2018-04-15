@@ -42,5 +42,5 @@ void Philosopher::live() {
 }
 
 std::thread Philosopher::spawnThread() {
-	return std::thread( [this] { this->live(); } );
+	return std::thread([this] { this->live(); });
 }

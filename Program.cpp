@@ -23,8 +23,8 @@ void Program::start() {
 
 	showHeader();
 
-    time(&startTime);
-    
+	time(&startTime);
+
 	for (auto &philosopher : philosophers) {
 		threads.emplace_back(philosopher.spawnThread());
 	}
@@ -44,13 +44,13 @@ bool Program::showPhilosophersStatus() {
 	time_t currentTime;
 	time(&currentTime);
 
-	string diffTime = to_string((int)difftime(currentTime, startTime));
+	string diffTime = to_string((int) difftime(currentTime, startTime));
 
-	cout<<diffTime;
+	cout << diffTime;
 	for (int i = 0; i < (5 - diffTime.length()); i++) {
-		cout<<" ";
+		cout << " ";
 	}
-	cout<<"| ";
+	cout << "| ";
 
 	bool shouldTerminate = false;
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
@@ -67,41 +67,41 @@ bool Program::showPhilosophersStatus() {
 		}
 
 		if (philosophers[i].state == 3) {
-			cout<<"Dead";
-			cout<<"         ";
+			cout << "Dead";
+			cout << "         ";
 
 		} else if (philosophers[i].state == 2) {
-			cout<<"Eating";
-			cout<<"       ";
+			cout << "Eating";
+			cout << "       ";
 		} else if (philosophers[i].state == 1) {
-			cout<<"Thinking";
-			cout<<"     ";
+			cout << "Thinking";
+			cout << "     ";
 		} else if (philosophers[i].state == 0)
-			cout<<"Not yet start";
+			cout << "Not yet start";
 		else {
-			cout<<"Error!";
-			cout<<"       ";
+			cout << "Error!";
+			cout << "       ";
 		}
 		if (i < numberOfPhilosophers - 1)
-			cout<<" | ";
+			cout << " | ";
 		else
-			cout<<endl;
+			cout << endl;
 	}
 
 	return !shouldTerminate;
 }
 
 void Program::showHeader() {
-    cout<<"Time | ";
-    for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
-        cout << "Philosopher "<<i;
-        if (i < numberOfPhilosophers - 1)
-            cout<<" | ";
-        else
-            cout<<endl;
-    }
-    for (unsigned int i = 0; i < 77; i++) {
-        cout << "-";
-    }
-    cout<<endl;
+	cout << "Time | ";
+	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
+		cout << "Philosopher " << i;
+		if (i < numberOfPhilosophers - 1)
+			cout << " | ";
+		else
+			cout << endl;
+	}
+	for (unsigned int i = 0; i < 77; i++) {
+		cout << "-";
+	}
+	cout << endl;
 }

@@ -18,6 +18,7 @@ private:
 	void think(unsigned int seconds);
 
 	void eat();
+
 public:
 	unsigned char state; // 0 - not started yet; 1 - thinking; 2 - eating; 3 - dead
 

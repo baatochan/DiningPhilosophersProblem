@@ -12,16 +12,18 @@
 
 class Program {
 private:
-    static int numberOfPhilosophers;
+	static int numberOfPhilosophers;
 
-    static std::vector<Philosopher> philosophers;
-    static std::vector<std::thread> threads;
+	static std::vector<Philosopher> philosophers;
+	static std::vector<std::thread> threads;
 
 	static time_t startTime;
 public:
 	static void start();
+
 private:
 	static void showHeader();
+
 	static bool showPhilosophersStatus();
 };
 
