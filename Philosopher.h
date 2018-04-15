@@ -17,7 +17,7 @@ private:
 	bool rightFork;
 
 	std::mutex * stateMutex;
-	unsigned char state; // 0 - not started yet; 1 - thinking; 2 - eating; 3 - dead
+	unsigned char state; // 0 - not started yet; 1 - thinking; 2 - sleeping (waiting for forks); 3 - eating; 4 - dead
 
 	void setState(unsigned char state);
 

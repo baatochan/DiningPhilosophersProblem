@@ -16,14 +16,15 @@ void Philosopher::setState(unsigned char state) {
 }
 
 void Philosopher::think(unsigned int seconds) {
-	state = 1;
+	setState(1);
 	this_thread::sleep_for(chrono::seconds(seconds));
 }
 
 void Philosopher::eat() {
-	state = 2;
+	setState(2);
 	leftFork = false;
 	rightFork = false;
+	setState(3);
 	this_thread::sleep_for(chrono::seconds(2));
 	leftFork = true;
 	rightFork = true;
@@ -38,15 +39,15 @@ void Philosopher::live() {
 		think((unsigned int) dist(mt));
 		eat();
 	}
-	state = 3;
+	setState(4);
 }
 
 Philosopher::Philosopher(unsigned int id) {
 	this->id = id;
 	leftFork = true;
 	rightFork = true;
-	state = 0;
 	stateMutex = new mutex;
+	setState(0);
 }
 
 std::thread Philosopher::spawnThread() {

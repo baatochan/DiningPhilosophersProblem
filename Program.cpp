@@ -5,6 +5,7 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
+#include <string>
 #include "Program.h"
 
 using namespace std;
@@ -31,7 +32,7 @@ void Program::start() {
 
 	bool run = true;
 	while (run) {
-		run = showPhilosophersStatus();
+		run = showThreadsStatus();
 		this_thread::sleep_for(chrono::milliseconds(250));
 	}
 
@@ -40,7 +41,7 @@ void Program::start() {
 	}
 }
 
-bool Program::showPhilosophersStatus() {
+bool Program::showThreadsStatus() {
 	time_t currentTime;
 	time(&currentTime);
 
@@ -100,7 +101,7 @@ void Program::showHeader() {
 		else
 			cout << endl;
 	}
-	for (unsigned int i = 0; i < 77; i++) {
+	for (unsigned int i = 0; i < 84; i++) {
 		cout << "-";
 	}
 	cout << endl;

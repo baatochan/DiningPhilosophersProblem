@@ -24,7 +24,7 @@ public:
 private:
 	static void showHeader();
 
-	static bool showPhilosophersStatus();
+	static bool showThreadsStatus();
 };
 
 
