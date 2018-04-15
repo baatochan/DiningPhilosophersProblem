@@ -3,19 +3,21 @@
 //
 
 #include <random>
-#include <unistd.h>
+#include <chrono>
 #include "Philosopher.h"
+
+using namespace std;
 
 void Philosopher::think(unsigned int seconds) {
 	state = 1;
-	sleep(seconds);
+	this_thread::sleep_for(chrono::seconds(seconds));
 }
 
 void Philosopher::eat() {
 	state = 2;
 	leftFork = false;
 	rightFork = false;
-	sleep(2);
+	this_thread::sleep_for(chrono::seconds(2));
 	leftFork = true;
 	rightFork = true;
 }
@@ -28,9 +30,9 @@ Philosopher::Philosopher(unsigned int id) {
 }
 
 void Philosopher::live() {
-	std::random_device rd;
-	std::mt19937 mt(rd());
-	std::uniform_int_distribution<int> dist(1, 10);
+	random_device rd;
+	mt19937 mt(rd());
+	uniform_int_distribution<int> dist(1, 10);
 
 	for (int i = 0; i < 5; i++) {
 		think((unsigned int) dist(mt));
