@@ -6,6 +6,7 @@
 #include <chrono>
 #include <mutex>
 #include "Philosopher.h"
+#include "Waiter.h"
 
 using namespace std;
 
@@ -22,18 +23,19 @@ void Philosopher::think(unsigned int seconds) {
 
 void Philosopher::eat() {
 	setState(2);
-	leftFork = false;
-	rightFork = false;
+	waiter->askForForks(this);
+	philosopherSleep->wait(*uniqueLock, [this]{return forksAvailable;});
 	setState(3);
 	this_thread::sleep_for(chrono::seconds(2));
-	leftFork = true;
-	rightFork = true;
+	waiter->returnForks(this);
 }
 
 void Philosopher::live() {
 	random_device rd;
 	mt19937 mt(rd());
 	uniform_int_distribution<int> dist(1, 10);
+
+	uniqueLock = new unique_lock<mutex>(*philosopherMutex);
 
 	for (int i = 0; i < 5; i++) {
 		think((unsigned int) dist(mt));
@@ -42,10 +44,10 @@ void Philosopher::live() {
 	setState(4);
 }
 
-Philosopher::Philosopher(unsigned int id) {
+Philosopher::Philosopher(unsigned int id, Waiter* waiter) {
 	this->id = id;
-	leftFork = true;
-	rightFork = true;
+	this->waiter = waiter;
+	forksAvailable = false;
 	stateMutex = new mutex;
 	setState(0);
 }
@@ -55,5 +57,15 @@ std::thread Philosopher::spawnThread() {
 }
 
 unsigned char Philosopher::getState() const {
+	unique_lock<mutex> uniqueLock(*stateMutex);
 	return state;
+}
+
+unsigned int Philosopher::getId() const {
+	return id;
+}
+
+void Philosopher::wakeUp() {
+	forksAvailable = true;
+	philosopherSleep->notify_all();
 }

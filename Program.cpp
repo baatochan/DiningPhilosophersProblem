@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "Program.h"
+#include "Waiter.h"
 
 using namespace std;
 
@@ -18,8 +19,10 @@ vector<thread> Program::threads;
 time_t Program::startTime;
 
 void Program::start() {
+	Waiter waiter(numberOfPhilosophers);
+
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
-		philosophers.emplace_back(i);
+		philosophers.emplace_back(i, &waiter);
 	}
 
 	showHeader();
@@ -35,6 +38,8 @@ void Program::start() {
 		run = showThreadsStatus();
 		this_thread::sleep_for(chrono::milliseconds(250));
 	}
+
+	waiter.setTerminate(true);
 
 	for (auto &thread : threads) {
 		thread.join();
