@@ -55,28 +55,28 @@ bool Program::showPhilosophersStatus() {
 	bool shouldTerminate = false;
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
 		if (i == 0) {
-			if (philosophers[i].state == 3)
+			if (philosophers[i].getState() == 3)
 				shouldTerminate = true;
 			else
 				shouldTerminate = false;
 		} else {
-			if (shouldTerminate && philosophers[i].state == 3)
+			if (shouldTerminate && philosophers[i].getState() == 3)
 				shouldTerminate = true;
 			else
 				shouldTerminate = false;
 		}
 
-		if (philosophers[i].state == 3) {
+		if (philosophers[i].getState() == 3) {
 			cout << "Dead";
 			cout << "         ";
 
-		} else if (philosophers[i].state == 2) {
+		} else if (philosophers[i].getState() == 2) {
 			cout << "Eating";
 			cout << "       ";
-		} else if (philosophers[i].state == 1) {
+		} else if (philosophers[i].getState() == 1) {
 			cout << "Thinking";
 			cout << "     ";
-		} else if (philosophers[i].state == 0)
+		} else if (philosophers[i].getState() == 0)
 			cout << "Not yet start";
 		else {
 			cout << "Error!";

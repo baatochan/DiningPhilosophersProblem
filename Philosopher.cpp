@@ -4,9 +4,16 @@
 
 #include <random>
 #include <chrono>
+#include <mutex>
 #include "Philosopher.h"
 
 using namespace std;
+
+void Philosopher::setState(unsigned char state) {
+	stateMutex->lock();
+		Philosopher::state = state;
+	stateMutex->unlock();
+}
 
 void Philosopher::think(unsigned int seconds) {
 	state = 1;
@@ -22,13 +29,6 @@ void Philosopher::eat() {
 	rightFork = true;
 }
 
-Philosopher::Philosopher(unsigned int id) {
-	this->id = id;
-	leftFork = true;
-	rightFork = true;
-	state = 0;
-}
-
 void Philosopher::live() {
 	random_device rd;
 	mt19937 mt(rd());
@@ -41,6 +41,18 @@ void Philosopher::live() {
 	state = 3;
 }
 
+Philosopher::Philosopher(unsigned int id) {
+	this->id = id;
+	leftFork = true;
+	rightFork = true;
+	state = 0;
+	stateMutex = new mutex;
+}
+
 std::thread Philosopher::spawnThread() {
 	return std::thread([this] { this->live(); });
+}
+
+unsigned char Philosopher::getState() const {
+	return state;
 }
