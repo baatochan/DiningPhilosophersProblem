@@ -9,10 +9,13 @@
 #include <thread>
 #include <vector>
 #include "Philosopher.h"
+#include "Waiter.h"
 
 class Program {
 private:
 	static int numberOfPhilosophers;
+
+	static Waiter* waiter;
 
 	static std::vector<Philosopher*> philosophers;
 	static std::vector<std::thread> threads;

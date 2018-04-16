@@ -12,8 +12,12 @@
 
 class Waiter {
 private:
+	std::mutex forksMutex;
 	std::vector<bool> forks; //false if used, true if free
 	std::vector<Philosopher*> queue;
+
+	std::mutex stateMutex;
+	unsigned char state; // 0 - not started yet; 1 - sleeping; 2 - checking queue; 3 - dead
 
 	std::condition_variable waiterSleep;
 	std::mutex waiterMutex;
@@ -22,6 +26,9 @@ private:
 	bool terminate;
 
 	int numberOfPhilosophers;
+
+	void setState(unsigned char state);
+
 public:
 	Waiter(int numberOfPhilosophers);
 
@@ -34,6 +41,12 @@ public:
 	void setTerminate(bool terminate);
 
 	std::thread spawnThread();
+
+	unsigned char getState() const;
+
+	void wakeUp();
+
+	const std::vector<bool> &getForks() const;
 };
 
 

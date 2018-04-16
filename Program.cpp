@@ -7,11 +7,12 @@
 #include <vector>
 #include <string>
 #include "Program.h"
-#include "Waiter.h"
 
 using namespace std;
 
 int Program::numberOfPhilosophers = 5;
+
+Waiter* Program::waiter = new Waiter(Program::numberOfPhilosophers);
 
 vector<Philosopher*> Program::philosophers;
 vector<thread> Program::threads;
@@ -19,12 +20,10 @@ vector<thread> Program::threads;
 time_t Program::startTime;
 
 void Program::start() {
-	Waiter waiter(numberOfPhilosophers);
-
-	thread waiterThread = waiter.spawnThread();
+	thread waiterThread = waiter->spawnThread();
 
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
-		philosophers.push_back(new Philosopher(i, &waiter));
+		philosophers.push_back(new Philosopher(i, waiter));
 	}
 
 	showHeader();
@@ -41,11 +40,13 @@ void Program::start() {
 		this_thread::sleep_for(chrono::milliseconds(250));
 	}
 
-	waiter.setTerminate(true);
+	waiter->setTerminate(true);
 
-	for (auto &thread : threads) {
-		thread.join();
+	for (int i = 0; i <threads.size(); i++) {
+		threads[i].join();
 	}
+
+	waiter->wakeUp();
 	waiterThread.join();
 }
 
@@ -94,6 +95,45 @@ bool Program::showThreadsStatus() {
 			cout << "Error!";
 			cout << "       ";
 		}
+		cout << " | ";
+		/*if (i < numberOfPhilosophers - 1)
+			cout << " | ";
+		else
+			cout << endl;*/
+	}
+
+	if (waiter->getState() == 3) {
+		cout << "Dead";
+		cout << "         ";
+
+	} else if (waiter->getState() == 2) {
+		cout << "Checking";
+		cout << "     ";
+	} else if (waiter->getState() == 1) {
+		cout << "Sleeping";
+		cout << "     ";
+	} else if (waiter->getState() == 0)
+		cout << "Not yet start";
+	else {
+		cout << "Error!";
+		cout << "       ";
+	}
+
+	cout << " | ";
+	vector<bool> forks = waiter->getForks();
+
+	for(int i = 0; i < forks.size(); i++) {
+		if (forks[i]) {
+			cout << "Free";
+			cout << "    ";
+
+		} else if (!forks[i]) {
+			cout << "Occupied";
+			cout << "";
+		} else {
+			cout << "Error!";
+			cout << "  ";
+		}
 		if (i < numberOfPhilosophers - 1)
 			cout << " | ";
 		else
@@ -107,12 +147,21 @@ void Program::showHeader() {
 	cout << "Time | ";
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
 		cout << "Philosopher " << i;
+		cout << " | ";
+		/*if (i < numberOfPhilosophers - 1)
+			cout << " | ";
+		else
+			cout << endl;*/
+	}
+	cout<<"Waiter       "<<" | ";
+	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
+		cout << "Fork " << i << "  ";
 		if (i < numberOfPhilosophers - 1)
 			cout << " | ";
 		else
 			cout << endl;
 	}
-	for (unsigned int i = 0; i < 84; i++) {
+	for (unsigned int i = 0; i < 155; i++) {
 		cout << "-";
 	}
 	cout << endl;

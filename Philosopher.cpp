@@ -27,6 +27,7 @@ void Philosopher::eat() {
 	philosopherSleep.wait(uniqueLock, [this]{return forksAvailable;});
 	setState(3);
 	this_thread::sleep_for(chrono::seconds(2));
+	forksAvailable = false;
 	waiter->returnForks(this);
 }
 
@@ -37,7 +38,7 @@ void Philosopher::live() {
 
 	uniqueLock = unique_lock<mutex>(philosopherMutex);
 
-	for (int i = 0; i < 5; i++) {
+	while (!terminate) {
 		think((unsigned int) dist(mt));
 		eat();
 	}
@@ -48,6 +49,7 @@ Philosopher::Philosopher(unsigned int id, Waiter* waiter) {
 	this->id = id;
 	this->waiter = waiter;
 	forksAvailable = false;
+	terminate = false;
 	setState(0);
 }
 

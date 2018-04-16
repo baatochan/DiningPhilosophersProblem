@@ -20,6 +20,7 @@ private:
 	unsigned char state; // 0 - not started yet; 1 - thinking; 2 - sleeping (waiting for forks); 3 - eating; 4 - dead
 
 	bool forksAvailable;
+	bool terminate;
 
 	void setState(unsigned char state);
 
