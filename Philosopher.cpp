@@ -11,9 +11,9 @@
 using namespace std;
 
 void Philosopher::setState(unsigned char state) {
-	stateMutex->lock();
+	stateMutex.lock();
 		Philosopher::state = state;
-	stateMutex->unlock();
+	stateMutex.unlock();
 }
 
 void Philosopher::think(unsigned int seconds) {
@@ -24,7 +24,7 @@ void Philosopher::think(unsigned int seconds) {
 void Philosopher::eat() {
 	setState(2);
 	waiter->askForForks(this);
-	philosopherSleep->wait(*uniqueLock, [this]{return forksAvailable;});
+	philosopherSleep.wait(uniqueLock, [this]{return forksAvailable;});
 	setState(3);
 	this_thread::sleep_for(chrono::seconds(2));
 	waiter->returnForks(this);
@@ -35,7 +35,7 @@ void Philosopher::live() {
 	mt19937 mt(rd());
 	uniform_int_distribution<int> dist(1, 10);
 
-	uniqueLock = new unique_lock<mutex>(*philosopherMutex);
+	uniqueLock = unique_lock<mutex>(philosopherMutex);
 
 	for (int i = 0; i < 5; i++) {
 		think((unsigned int) dist(mt));
@@ -48,7 +48,6 @@ Philosopher::Philosopher(unsigned int id, Waiter* waiter) {
 	this->id = id;
 	this->waiter = waiter;
 	forksAvailable = false;
-	stateMutex = new mutex;
 	setState(0);
 }
 
@@ -56,16 +55,16 @@ std::thread Philosopher::spawnThread() {
 	return std::thread([this] { this->live(); });
 }
 
-unsigned char Philosopher::getState() const {
-	unique_lock<mutex> uniqueLock(*stateMutex);
+unsigned char Philosopher::getState() {
+	//unique_lock<mutex> uniqueLock(stateMutex);
 	return state;
 }
 
-unsigned int Philosopher::getId() const {
+unsigned int Philosopher::getId() {
 	return id;
 }
 
 void Philosopher::wakeUp() {
 	forksAvailable = true;
-	philosopherSleep->notify_all();
+	philosopherSleep.notify_all();
 }

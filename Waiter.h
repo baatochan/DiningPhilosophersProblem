@@ -17,6 +17,7 @@ private:
 
 	std::condition_variable waiterSleep;
 	std::mutex waiterMutex;
+	bool checkQueue;
 
 	bool terminate;
 
@@ -31,6 +32,8 @@ public:
 	void returnForks(Philosopher* p);
 
 	void setTerminate(bool terminate);
+
+	std::thread spawnThread();
 };
 
 

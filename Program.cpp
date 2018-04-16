@@ -13,7 +13,7 @@ using namespace std;
 
 int Program::numberOfPhilosophers = 5;
 
-vector<Philosopher> Program::philosophers;
+vector<Philosopher*> Program::philosophers;
 vector<thread> Program::threads;
 
 time_t Program::startTime;
@@ -21,8 +21,10 @@ time_t Program::startTime;
 void Program::start() {
 	Waiter waiter(numberOfPhilosophers);
 
+	thread waiterThread = waiter.spawnThread();
+
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
-		philosophers.emplace_back(i, &waiter);
+		philosophers.push_back(new Philosopher(i, &waiter));
 	}
 
 	showHeader();
@@ -30,7 +32,7 @@ void Program::start() {
 	time(&startTime);
 
 	for (auto &philosopher : philosophers) {
-		threads.emplace_back(philosopher.spawnThread());
+		threads.emplace_back(philosopher->spawnThread());
 	}
 
 	bool run = true;
@@ -44,6 +46,7 @@ void Program::start() {
 	for (auto &thread : threads) {
 		thread.join();
 	}
+	waiterThread.join();
 }
 
 bool Program::showThreadsStatus() {
@@ -61,28 +64,31 @@ bool Program::showThreadsStatus() {
 	bool shouldTerminate = false;
 	for (unsigned int i = 0; i < numberOfPhilosophers; i++) {
 		if (i == 0) {
-			if (philosophers[i].getState() == 3)
+			if (philosophers[i]->getState() == 4)
 				shouldTerminate = true;
 			else
 				shouldTerminate = false;
 		} else {
-			if (shouldTerminate && philosophers[i].getState() == 3)
+			if (shouldTerminate && philosophers[i]->getState() == 4)
 				shouldTerminate = true;
 			else
 				shouldTerminate = false;
 		}
 
-		if (philosophers[i].getState() == 3) {
+		if (philosophers[i]->getState() == 4) {
 			cout << "Dead";
 			cout << "         ";
 
-		} else if (philosophers[i].getState() == 2) {
+		} else if (philosophers[i]->getState() == 3) {
 			cout << "Eating";
 			cout << "       ";
-		} else if (philosophers[i].getState() == 1) {
+		} else if (philosophers[i]->getState() == 2) {
+			cout << "Waiting";
+			cout << "      ";
+		} else if (philosophers[i]->getState() == 1) {
 			cout << "Thinking";
 			cout << "     ";
-		} else if (philosophers[i].getState() == 0)
+		} else if (philosophers[i]->getState() == 0)
 			cout << "Not yet start";
 		else {
 			cout << "Error!";
