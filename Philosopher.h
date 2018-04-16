@@ -47,6 +47,8 @@ public:
 	unsigned int getId();
 
 	void wakeUp();
+
+	void setTerminate(bool terminate);
 };
 
 

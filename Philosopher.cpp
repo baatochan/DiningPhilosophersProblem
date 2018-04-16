@@ -70,3 +70,7 @@ void Philosopher::wakeUp() {
 	forksAvailable = true;
 	philosopherSleep.notify_all();
 }
+
+void Philosopher::setTerminate(bool terminate) {
+    Philosopher::terminate = terminate;
+}

@@ -10,4 +10,4 @@ endif (CMAKE_BUILD_TYPE MATCHES "Rel")
 
 #if(CMAKE_BUILD_TYPE STREQUAL Debug)
 
-add_executable(DiningPhilosophersProblem main.cpp Program.cpp Program.h Philosopher.cpp Philosopher.h Waiter.cpp Waiter.h)
+add_executable(DiningPhilosophersProblem main.cpp Program.cpp Program.h Philosopher.cpp Philosopher.h Waiter.cpp Waiter.h WaitForInput.cpp WaitForInput.h)

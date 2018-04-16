@@ -42,15 +42,15 @@ void Waiter::start() {
 			if (right == numberOfPhilosophers)
 				right = 0;
 			//cout<<"Id: "<<i<<"; Philos: "<<id<<"; forks: "<<(forks[left] && forks[right])<<endl;
+			forksMutex.lock();
 			if (forks[left] && forks[right]) {
-				forksMutex.lock();
 					forks[left] = false;
 					forks[right] = false;
-				forksMutex.unlock();
 				philosopher->wakeUp();
 				queue.erase(queue.begin() + i);
 				i--;
 			}
+			forksMutex.unlock();
 			i++;
 		}
 	}

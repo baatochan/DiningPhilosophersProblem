@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "Program.h"
+#include "WaitForInput.h"
 
 using namespace std;
 
@@ -34,11 +35,16 @@ void Program::start() {
 		threads.emplace_back(philosopher->spawnThread());
 	}
 
+    WaitForInput wfi(&philosophers);
+    thread waitThread = wfi.spawnThread();
+
 	bool run = true;
 	while (run) {
 		run = showThreadsStatus();
 		this_thread::sleep_for(chrono::milliseconds(250));
 	}
+
+    waitThread.join();
 
 	waiter->setTerminate(true);
 
