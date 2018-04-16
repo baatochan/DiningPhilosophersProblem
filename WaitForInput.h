@@ -12,11 +12,11 @@
 
 class WaitForInput {
 private:
-    std::vector<Philosopher*>* philosophers;
-    void wait();
+	std::vector<Philosopher*>* philosophers;
+	void wait();
 public:
-    WaitForInput(std::vector<Philosopher*>* philosophers);
-    std::thread spawnThread();
+	WaitForInput(std::vector<Philosopher*>* philosophers);
+	std::thread spawnThread();
 };
 
 

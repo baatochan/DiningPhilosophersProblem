@@ -6,22 +6,22 @@
 #include "WaitForInput.h"
 
 void WaitForInput::wait() {
-    char c = 0;
-    while (c != 'q') {
-        //std::cin >> c;
-        scanf(" %c", &c);
-    }
+	char c = 0;
+	while (c != 'q') {
+		//std::cin >> c;
+		scanf(" %c", &c);
+	}
 
-    for (int i = 0; i < philosophers->size(); i++) {
-        Philosopher * p = (*philosophers)[i];
-        p->setTerminate(true);
-    }
+	for (int i = 0; i < philosophers->size(); i++) {
+		Philosopher * p = (*philosophers)[i];
+		p->setTerminate(true);
+	}
 }
 
 std::thread WaitForInput::spawnThread() {
-    return std::thread([this] { this->wait(); });
+	return std::thread([this] { this->wait(); });
 }
 
 WaitForInput::WaitForInput(std::vector<Philosopher *> *philosophers) {
-    this->philosophers = philosophers;
+	this->philosophers = philosophers;
 }

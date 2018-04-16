@@ -35,8 +35,8 @@ void Program::start() {
 		threads.emplace_back(philosopher->spawnThread());
 	}
 
-    WaitForInput wfi(&philosophers);
-    thread waitThread = wfi.spawnThread();
+	WaitForInput wfi(&philosophers);
+	thread waitThread = wfi.spawnThread();
 
 	bool run = true;
 	while (run) {
@@ -44,7 +44,7 @@ void Program::start() {
 		this_thread::sleep_for(chrono::milliseconds(250));
 	}
 
-    waitThread.join();
+	waitThread.join();
 
 	waiter->setTerminate(true);
 

@@ -32,6 +32,8 @@ void Waiter::start() {
 		setState(1);
 		waiterSleep.wait(uniqueLock, [this] {return checkQueue;});
 		setState(2);
+		forksMutex.unlock();
+		forksMutex.lock();
 		checkQueue = false;
 		int i = 0;
 		for (auto &philosopher : queue) {
@@ -42,17 +44,16 @@ void Waiter::start() {
 			if (right == numberOfPhilosophers)
 				right = 0;
 			//cout<<"Id: "<<i<<"; Philos: "<<id<<"; forks: "<<(forks[left] && forks[right])<<endl;
-			forksMutex.lock();
 			if (forks[left] && forks[right]) {
-					forks[left] = false;
-					forks[right] = false;
+				forks[left] = false;
+				forks[right] = false;
 				philosopher->wakeUp();
 				queue.erase(queue.begin() + i);
 				i--;
 			}
-			forksMutex.unlock();
 			i++;
 		}
+		forksMutex.unlock();
 	}
 	setState(3);
 }
@@ -71,6 +72,7 @@ void Waiter::returnForks(Philosopher* p) {
 	int right = id + 1;
 	if (right == numberOfPhilosophers)
 		right = 0;
+	forksMutex.unlock();
 	forksMutex.lock();
 		forks[left] = true;
 		forks[right] = true;
