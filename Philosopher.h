@@ -31,7 +31,7 @@ private:
 	std::condition_variable philosopherSleep;
 	std::unique_lock<std::mutex> uniqueLock;
 
-	void think(unsigned int seconds);
+	void think(unsigned int deciseconds);
 
 	void eat();
 
