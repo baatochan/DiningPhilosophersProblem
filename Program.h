@@ -20,14 +20,17 @@ private:
 	static std::vector<Philosopher*> philosophers;
 	static std::vector<std::thread> threads;
 
+	static bool fileExport;
+	static bool shouldTerminate;
+
 	static time_t startTime;
 public:
 	static void start();
 
 private:
-	static void showHeader();
+	static std::string getHeader();
 
-	static bool showThreadsStatus();
+	static std::string getThreadsStatus();
 };
 
 
