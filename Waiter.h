@@ -12,7 +12,7 @@
 
 class Waiter {
 private:
-	std::mutex forksMutex;
+	std::mutex forksQueueMutex;
 	std::vector<bool> forks; //false if used, true if free
 	std::vector<Philosopher*> queue;
 
@@ -42,11 +42,11 @@ public:
 
 	std::thread spawnThread();
 
-	unsigned char getState() const;
+	unsigned char getState();
 
 	void wakeUp();
 
-	const std::vector<bool> &getForks() const;
+	const std::vector<bool> getForks();
 };
 
 

@@ -19,6 +19,7 @@ private:
 	std::mutex stateMutex;
 	unsigned char state; // 0 - not started yet; 1 - thinking; 2 - sleeping (waiting for forks); 3 - eating; 4 - dead
 
+	std::mutex forksAvalibityMutex;
 	bool forksAvailable;
 	bool terminate;
 

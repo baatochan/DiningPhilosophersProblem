@@ -22,13 +22,19 @@ void Philosopher::think(unsigned int seconds) {
 }
 
 void Philosopher::eat() {
-	setState(2);
-	waiter->askForForks(this);
+	forksAvalibityMutex.lock();
+		setState(2);
+		waiter->askForForks(this);
+	forksAvalibityMutex.unlock();
+
 	philosopherSleep.wait(uniqueLock, [this]{return forksAvailable;});
-	setState(3);
-	this_thread::sleep_for(chrono::seconds(2));
-	forksAvailable = false;
-	waiter->returnForks(this);
+
+	forksAvalibityMutex.lock();
+		setState(3);
+		this_thread::sleep_for(chrono::seconds(2));
+		forksAvailable = false;
+		waiter->returnForks(this);
+	forksAvalibityMutex.unlock();
 }
 
 void Philosopher::live() {
@@ -58,8 +64,11 @@ std::thread Philosopher::spawnThread() {
 }
 
 unsigned char Philosopher::getState() {
-	//unique_lock<mutex> uniqueLock(stateMutex);
-	return state;
+	stateMutex.lock();
+		unsigned char temp = state;
+	stateMutex.unlock();
+
+	return temp;
 }
 
 unsigned int Philosopher::getId() {
@@ -67,10 +76,12 @@ unsigned int Philosopher::getId() {
 }
 
 void Philosopher::wakeUp() {
-	forksAvailable = true;
-	philosopherSleep.notify_all();
+	forksAvalibityMutex.lock();
+		forksAvailable = true;
+		philosopherSleep.notify_all();
+	forksAvalibityMutex.unlock();
 }
 
 void Philosopher::setTerminate(bool terminate) {
-    Philosopher::terminate = terminate;
+	Philosopher::terminate = terminate;
 }

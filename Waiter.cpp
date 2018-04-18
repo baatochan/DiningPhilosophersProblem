@@ -27,58 +27,56 @@ Waiter::Waiter(int numberOfPhilosophers) {
 void Waiter::start() {
 	unique_lock<mutex> uniqueLock(waiterMutex);
 
+	setState(1);
 	while (!(terminate && queue.size() == 0)) {
-		//cout<<"xxx"<<endl;
-		setState(1);
 		waiterSleep.wait(uniqueLock, [this] {return checkQueue;});
-		setState(2);
-		forksMutex.unlock();
-		forksMutex.lock();
-		checkQueue = false;
-		int i = 0;
-		for (auto &philosopher : queue) {
-			if (philosopher == nullptr) continue;
-			int id = philosopher->getId();
-			int left = id;
-			int right = id + 1;
-			if (right == numberOfPhilosophers)
-				right = 0;
-			//cout<<"Id: "<<i<<"; Philos: "<<id<<"; forks: "<<(forks[left] && forks[right])<<endl;
-			if (forks[left] && forks[right]) {
-				forks[left] = false;
-				forks[right] = false;
-				philosopher->wakeUp();
-				queue.erase(queue.begin() + i);
-				i--;
+		forksQueueMutex.lock();
+			setState(2);
+			checkQueue = false;
+			int i = 0;
+			for (auto &philosopher : queue) {
+				int id = philosopher->getId();
+				int left = id;
+				int right = id + 1;
+				if (right == numberOfPhilosophers)
+					right = 0;
+				if (forks[left] && forks[right]) {
+					forks[left] = false;
+					forks[right] = false;
+					philosopher->wakeUp();
+					queue.erase(queue.begin() + i);
+					i--;
+				}
+				i++;
 			}
-			i++;
-		}
-		forksMutex.unlock();
+			setState(1);
+		forksQueueMutex.unlock();
 	}
 	setState(3);
 }
 
 void Waiter::askForForks(Philosopher* p) {
-	//if (p == nullptr) return;
-	queue.push_back(p);
-	checkQueue = true;
-	waiterSleep.notify_all();
+	forksQueueMutex.lock();
+		queue.push_back(p);
+
+		checkQueue = true;
+		waiterSleep.notify_all();
+	forksQueueMutex.unlock();
 }
 
 void Waiter::returnForks(Philosopher* p) {
 	int id = p->getId();
-	//cout<<"koniec: "<<id<<endl;
 	int left = id;
 	int right = id + 1;
 	if (right == numberOfPhilosophers)
 		right = 0;
-	forksMutex.unlock();
-	forksMutex.lock();
+	forksQueueMutex.lock();
 		forks[left] = true;
 		forks[right] = true;
-	forksMutex.unlock();
-	checkQueue = true;
-	waiterSleep.notify_all();
+
+		checkQueue = true;
+		waiterSleep.notify_all();
+	forksQueueMutex.unlock();
 }
 
 void Waiter::setTerminate(bool terminate) {
@@ -90,14 +88,25 @@ std::thread Waiter::spawnThread() {
 }
 
 void Waiter::wakeUp() {
-	checkQueue = true;
-	waiterSleep.notify_all();
+	forksQueueMutex.lock();
+		checkQueue = true;
+		waiterSleep.notify_all();
+	forksQueueMutex.unlock();
 }
 
-unsigned char Waiter::getState() const {
-	return state;
+unsigned char Waiter::getState() {
+	stateMutex.lock();
+		unsigned char temp = state;
+	stateMutex.unlock();
+
+	return temp;
 }
 
-const vector<bool> &Waiter::getForks() const {
-	return forks;
+const vector<bool> Waiter::getForks() {
+	forksQueueMutex.lock();
+		vector<bool> temp;
+		temp = forks;
+	forksQueueMutex.unlock();
+
+	return temp;
 }
