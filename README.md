@@ -1,5 +1,5 @@
 # Dining Philosophers Problem
-My attempt at resolving Dining Philosophers Problem done for operating systems course at the university.
+My attempt at resolving Dining Philosophers Problem done for Operating Systems (Systemy Operacyjne 2) course at the university.
 
 Author: Bartosz Rodziewicz
 
@@ -15,3 +15,5 @@ The life cycle of philosopher consists of:
 * eating (for 2s)
 
 The repo contains older release which solves the dining philosophers problem by giving every philosopher their own pair of forks.
+
+You have to compile it under Linux to make it work.
